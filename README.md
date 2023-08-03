@@ -11,7 +11,7 @@
 10. Email service
 11. @Async, Spring event
 12. Repository: query data
-12.1 Automatic Custom Queries
+- Automatic Custom Queries
 12.2 Manual Custom Queries (JPQL)
 12.3 Native query
 12.4 Customizing the Result with Class Constructors

@@ -12,11 +12,11 @@
 11. @Async, Spring event
 12. Repository: query data
 - Automatic Custom Queries
-12.2 Manual Custom Queries (JPQL)
-12.3 Native query
-12.4 Customizing the Result with Class Constructors
-12.5 Customizing the Result with Spring Data Projection (open/close)
-12.6 Join table
+- Manual Custom Queries (JPQL)
+- Native query
+- Customizing the Result with Class Constructors
+- Customizing the Result with Spring Data Projection (open/close)
+- Join table
 13. Sort, Paging với JPQL & native query, slice
 14. Cache query
 15. Mock, Unit test, Integration test: Mockito.mock() vs @Mock vs @MockBean, test controller, test service, test repo

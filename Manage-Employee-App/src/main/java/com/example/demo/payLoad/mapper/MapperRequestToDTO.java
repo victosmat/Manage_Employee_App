@@ -14,6 +14,7 @@ import com.example.demo.payLoad.request.UserRegistryRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,11 +39,15 @@ public class MapperRequestToDTO implements IMapperRequestToDTO {
                 .collect(Collectors.joining(", ")));
         userDTO.setUsername(user.getAccount().getUsername());
         userDTO.setFullName(user.getFullName());
-        List<AddressRequest> addressRequests = user.getAddress()
-                .stream()
-                .map(address -> new AddressRequest(address.getStreet(), address.getCity()))
-                .collect(Collectors.toList());
+        List<AddressRequest> addressRequests = new ArrayList<>();
+        if (user.getAddress() != null && !user.getAddress().isEmpty()) {
+            addressRequests = user.getAddress()
+                    .stream()
+                    .map(address -> new AddressRequest(address.getStreet(), address.getCity()))
+                    .collect(Collectors.toList());
+        }
         userDTO.setAddress(addressRequests);
+
         userDTO.setEmail(user.getEmail());
         return userDTO;
     }

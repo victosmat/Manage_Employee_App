@@ -72,7 +72,7 @@ public class UserService {
     @Autowired
     private UserSessionManager sessionManager;
 
-    private static final String CLIENT_ID = "603561517127-7lvevfcrrcirk2l8e55b1inaqvg94c4v.apps.googleusercontent.com";
+    private static final String CLIENT_ID = "603561517127-77u8ljf8p2gaba9buo96afkqp8b8ihj3.apps.googleusercontent.com";
 
     public UserDetails loadUserById(Long userId) {
         User user = userRepository.findById(userId).orElse(null);

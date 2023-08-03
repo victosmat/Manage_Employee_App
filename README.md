@@ -10,13 +10,13 @@
 9. Service, Scheduler/Cronjob (Scheduler/Cronjob động), Transactional
 10. Email service
 11. @Async, Spring event
-12. Repository: hiểu các cách query data
-    12.1 Automatic Custom Queries
-    12.2 Manual Custom Queries (JPQL)
-    12.3 Native query
-    12.4 Customizing the Result with Class Constructors
-    12.5 Customizing the Result with Spring Data Projection (open/close)
-    12.6 Join table
+12. Repository: query data
+12.1 Automatic Custom Queries
+12.2 Manual Custom Queries (JPQL)
+12.3 Native query
+12.4 Customizing the Result with Class Constructors
+12.5 Customizing the Result with Spring Data Projection (open/close)
+12.6 Join table
 13. Sort, Paging với JPQL & native query, slice
 14. Cache query
 15. Mock, Unit test, Integration test: Mockito.mock() vs @Mock vs @MockBean, test controller, test service, test repo

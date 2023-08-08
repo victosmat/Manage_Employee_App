@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface StructureRepository extends JpaRepository<Structure, Long> {
-    @Query(value = "SELECT * FROM Structure WHERE  user_id = :userId AND date_time LIKE %:dateTime% ORDER BY id", nativeQuery = true)
+    @Query(value = "SELECT * FROM structure WHERE user_id = :userId AND date_time LIKE %:dateTime% ORDER BY id", nativeQuery = true)
     List<Structure> checkStructureInUser(@Param("dateTime") String dateTime, @Param("userId") Long userId);
 
     @Query(value = "SELECT \n" +

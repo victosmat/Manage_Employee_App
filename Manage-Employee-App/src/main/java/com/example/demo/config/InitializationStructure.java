@@ -19,11 +19,11 @@ public class InitializationStructure {
     @Value("${spring.scheduled.hour.structure}")
     private int hourStructure;
 
-    @Scheduled(cron = "0 * ${spring.scheduled.hour.structure} * * ${spring.scheduled.day}")
+        @Scheduled(cron = "0 * ${spring.scheduled.hour.structure} * * ${spring.scheduled.day}")
+//    @Scheduled(cron = "0 38 9 * * *")
     public void initializationStructure() {
-        String localDateTime = String.valueOf(LocalDateTime.now());
         userRepository.findAll().forEach(user -> {
-            Structure structure = new Structure(null, user, Structure.Status.CHECK_IN_MISSING, localDateTime);
+            Structure structure = new Structure(null, user, Structure.Status.CHECK_IN_MISSING, String.valueOf(LocalDateTime.now()));
             structureRepository.save(structure);
         });
     }

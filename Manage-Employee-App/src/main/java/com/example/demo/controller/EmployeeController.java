@@ -32,7 +32,6 @@ public class EmployeeController {
     }
 
     @PutMapping("/updateTime")
-    @Profile("dev")
     public Message<CheckTimeRequest> updateTime(HttpServletRequest httpServletRequest, @RequestBody TimeRequest timeRequest) {
         String token = httpServletRequest.getHeader("Authorization").substring(7);
         return userService.updateTime(timeRequest, token);

@@ -23,6 +23,6 @@ public class DemoApplication {
 
     @Bean
     NewTopic removeUserFromSession() {
-        return new NewTopic("remove-user-in-session", 2, (short) 1);
+        return new NewTopic("remove-user-in-session", 1, (short) 1);
     }
 }

@@ -5,16 +5,19 @@ import com.example.demo.entity.Structure;
 import com.example.demo.repository.StructureRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.EmailService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
 @Component
+@Slf4j
 public class CheckReminder {
     @Autowired
     private UserRepository userRepository;
@@ -32,20 +35,14 @@ public class CheckReminder {
     @Value("${spring.scheduled.day}")
     private String day;
 
-//    @Scheduled(fixedRate = 5000)
-//    public void doTask() {
-//        System.out.println("Task is running...");
-//    }
-
-    // thực hiện tại phút thứ 0 và 30 mỗi giờ từ 8h đến 12h mỗi ngày
-//    @Scheduled(cron = "0 0/30 8-12 * * ?")
+    //    @Scheduled(cron = "0 0/30 8-12 * * ?")
     @Scheduled(cron = "0 ${spring.scheduled.minute} ${spring.scheduled.hourCheckIn} * * ${spring.scheduled.day}")
-    public void sendCheckInReminder() throws MessagingException {
+    public void sendCheckInReminder() {
 
         userRepository.findAll().forEach(user -> {
             LocalTime checkinTime = LocalTime.parse(user.getTime().getCheckIn());
             LocalTime now = LocalTime.now();
-            List<Structure> structures = structureRepository.checkStructureInUser(String.valueOf(now), user.getID());
+            List<Structure> structures = structureRepository.checkStructureInUser(String.valueOf(LocalDate.now()), user.getID());
             Structure structure = structures.get(0);
             if (now.isAfter(checkinTime) && structure == null) {
                 String content = "you forgot to check-in with code " + user.getID();
@@ -56,14 +53,10 @@ public class CheckReminder {
     }
 
     @Scheduled(cron = "0 ${spring.scheduled.minute} ${spring.scheduled.hourCheckOut} * * ${spring.scheduled.day}")
-    public void sendCheckOutReminder() throws MessagingException {
+    public void sendCheckOutReminder() {
         userRepository.findAll().forEach(user -> {
-            LocalTime checkoutTime = LocalTime.parse(user.getTime().getCheckOut());
-            LocalTime now = LocalTime.now();
-            List<Structure> structures = structureRepository.checkStructureInUser(String.valueOf(now), user.getID());
-            if (structures.size() == 1) return;
-            Structure structure = structures.get(1);
-            if (now.isAfter(checkoutTime) && structure == null) {
+            List<Structure> structures = structureRepository.checkStructureInUser(String.valueOf(LocalDate.now()), user.getID());
+            if (structures.size() == 1) {
                 String content = "you forgot to check-out with code " + user.getID();
                 MailComponent mailDTO = new MailComponent(user.getEmail(), "Check-out notice!", content);
                 emailService.sendMail(mailDTO);

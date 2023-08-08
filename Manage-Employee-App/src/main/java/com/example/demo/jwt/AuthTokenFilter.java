@@ -1,13 +1,16 @@
 package com.example.demo.jwt;
 
 import com.example.demo.component.TokenValidationStatus;
+import com.example.demo.payLoad.Message;
 import com.example.demo.service.AccessTokenService;
 import com.example.demo.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNullApi;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -52,8 +55,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             String jwt = getJwtFromRequest(request);
             TokenValidationStatus validationStatus = tokenProvider.validateToken(jwt);
 
+            Message<?> message = new Message<>();
+            String messageString = "";
             switch (validationStatus) {
                 case VALID -> {
+                    messageString = "Valid";
                     Long userId = tokenProvider.getUserIdFromJWT(jwt);
                     UserDetails userDetails = customUserDetailsService.loadUserById(userId);
                     if (userDetails != null
@@ -68,12 +74,23 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
                 }
-                case INVALID_SIGNATURE -> logger.info("Invalid JWT signature.");
-                case INVALID_TOKEN -> logger.info("Invalid JWT token.");
-                case TOKEN_EXPIRED -> logger.info("Expired JWT token.");
-                case UNSUPPORTED_TOKEN -> logger.info("Unsupported JWT token.");
-                case EMPTY_CLAIMS -> logger.info("JWT claims string is empty.");
-                default -> logger.info("Unknown error.");
+
+                case INVALID_SIGNATURE -> messageString = "Invalid JWT signature.";
+                case INVALID_TOKEN -> messageString = "Invalid JWT token.";
+                case TOKEN_EXPIRED -> messageString = "Expired JWT token.";
+                case UNSUPPORTED_TOKEN -> messageString = "Unsupported JWT token.";
+                case EMPTY_CLAIMS -> messageString = "JWT claims string is empty.";
+                default -> messageString = "Unknown error.";
+            }
+            if (messageString.equals("Valid")) {
+                filterChain.doFilter(request, response);
+                return;
+            } else {
+                message.setMessage(messageString);
+                message.setHttpStatus(HttpStatus.UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write(new ObjectMapper().writeValueAsString(message));
+                return;
             }
         } catch (Exception ex) {
             log.error("Failed on set user authentication", ex);

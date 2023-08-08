@@ -195,13 +195,14 @@ public class UserService {
                     mapperRequestToDTO.mapperUserRegistryRequestToDTO(userRegistryRequest));
     }
 
-    public AuthDTO validateToken(String token) {
+    public Message<AuthDTO> validateToken(String token) {
         TokenValidationStatus tokenValidationStatus = tokenProvider.validateToken(token);
-        if (tokenValidationStatus != TokenValidationStatus.VALID) throw new RuntimeException("Invalid JWT token");
+        if (tokenValidationStatus != TokenValidationStatus.VALID)
+            return new Message<>(tokenValidationStatus.name(), HttpStatus.BAD_REQUEST, null);
         Optional<User> userOptional = userRepository.findById(tokenProvider.getUserIdFromJWT(token));
-        if (userOptional.isEmpty()) throw new RuntimeException("User not found");
+        if (userOptional.isEmpty()) return new Message<>("User not found", HttpStatus.BAD_REQUEST, null);
         User user = userOptional.get();
-        return new AuthDTO(user.getID(), user.getAccount().getUsername(), token);
+        return new Message<>("Token is valid", HttpStatus.OK, new AuthDTO(user.getID(), user.getAccount().getUsername(), token));
     }
 
     @Transactional

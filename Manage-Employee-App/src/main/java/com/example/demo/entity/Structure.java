@@ -17,7 +17,7 @@ public class Structure {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ID;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

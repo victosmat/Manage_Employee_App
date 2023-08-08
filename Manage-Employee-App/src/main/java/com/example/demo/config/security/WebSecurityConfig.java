@@ -3,13 +3,16 @@ package com.example.demo.config.security;
 import com.example.demo.entity.Account;
 import com.example.demo.entity.User;
 import com.example.demo.jwt.AuthTokenFilter;
+import com.example.demo.payLoad.Message;
 import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
@@ -24,6 +27,8 @@ import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.web.client.RestTemplate;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableScheduling
@@ -65,37 +70,43 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-        // Cấu hình UserDetailsService để lấy thông tin người dùng từ cơ sở dữ liệu
         auth.userDetailsService(username -> {
-            // Kiểm tra xem user có tồn tại trong database không?
             Account account = accountRepository.findByUsername(username);
             User user = userRepository.findByAccount(account);
             if (account == null) throw new UsernameNotFoundException(username + " not found");
             return new CustomerUserDetails(user);
-        }).passwordEncoder(passwordEncoder()); // Cung cấp password encoder
+        }).passwordEncoder(passwordEncoder());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable() // Disable CSRF (tắt bộ lọc)
-                .cors().disable() // Ngăn chặn request từ một domain khác
-                // không sử dụng session, sử dụng jwt
+        http.csrf().disable()
+                .cors().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow CORS option calls
-                .antMatchers("/auth/**", "/user/**").permitAll() // Cho phép tất cả mọi người truy cập vào địa chỉ này
+                .authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers("/auth/**", "/user/**").permitAll()
                 .antMatchers("/employee/**").hasAnyAuthority("ADMIN", "EMPLOYEE")
                 .antMatchers("/admin/**", "/cronjob/**").hasAnyAuthority("ADMIN")
-                .anyRequest().authenticated(); // Tất cả các request khác đều cần phải xác thực mới được truy cập
+                .anyRequest().authenticated()
+                .and()
+                .anonymous().authorities("ANONYMOUS");
 
-        // Cấu hình vô danh (Anonymous)
-        http.anonymous().authorities("ANONYMOUS");
-
-        // Thêm một lớp Filter kiểm tra jwt
         http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        // Cấu hình Remember Me
-        http.rememberMe().key(rememberMeKey).rememberMeServices(rememberMeServices()).userDetailsService(userDetailsService()).tokenValiditySeconds(86400); // Số giây token của remember me sẽ tồn tại (ở đây là 1 ngày)
+        http.rememberMe()
+                .key(rememberMeKey)
+                .rememberMeServices(rememberMeServices())
+                .userDetailsService(userDetailsService())
+                .tokenValiditySeconds(86400); // 1 ngày
+
+//        http.exceptionHandling()
+//                .authenticationEntryPoint((request, response, authException) -> {
+//                    Message<?> message = new Message<>("Authentication failed!", HttpStatus.UNAUTHORIZED, null);
+//                    response.setContentType("application/json");
+//                    response.getOutputStream().println(new ObjectMapper().writeValueAsString(message));
+//                });
     }
+
 }

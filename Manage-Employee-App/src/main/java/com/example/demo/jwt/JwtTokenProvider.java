@@ -30,6 +30,7 @@ public class JwtTokenProvider {
     private String JWT_SECRET;
 
     @Autowired
+
     private UserRepository userRepository;
 
 

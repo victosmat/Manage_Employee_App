@@ -37,7 +37,7 @@ public class UserEventConsumer {
         }
     }
 
-    @KafkaListener(topics = {"remove-user-from-session"})
+    @KafkaListener(topics = {"remove-user-in-session"})
     public void removeUserFromSession(ConsumerRecord<String, String> event) throws Exception {
         log.info("Event Received = {}", event);
         String payload = event.value();

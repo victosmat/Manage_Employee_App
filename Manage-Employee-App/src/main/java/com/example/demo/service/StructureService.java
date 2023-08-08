@@ -55,6 +55,7 @@ public class StructureService {
         LocalTime timeNow = LocalTime.parse(dateTimeNow.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
         List<Structure> checkTimes = structureRepository.checkStructureInUser(dateNow, userID);
         User user = userRepository.findById(userID).orElse(null);
+        assert user != null;
         LocalTime checkIn = LocalTime.parse(user.getTime().getCheckIn());
         LocalTime checkOut = LocalTime.parse(user.getTime().getCheckOut());
         if (checkTimes.size() == 1 && checkTimes.get(0).getStatus() == Structure.Status.CHECK_IN_MISSING) {

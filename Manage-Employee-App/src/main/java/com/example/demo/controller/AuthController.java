@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.config.MailConfig;
 import com.example.demo.component.UserSessionManager;
 import com.example.demo.entity.Account;
+import com.example.demo.entity.Structure;
 import com.example.demo.entity.User;
 import com.example.demo.payLoad.dto.UserDTOInSession;
 import com.example.demo.jwt.JwtTokenProvider;
@@ -13,6 +14,7 @@ import com.example.demo.payLoad.mapper.MapperRequestToDTO;
 import com.example.demo.payLoad.request.*;
 import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.RoleRepository;
+import com.example.demo.repository.StructureRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.config.security.CustomerUserDetails;
 import com.example.demo.service.AccessTokenService;
@@ -43,6 +45,7 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -87,6 +90,9 @@ public class AuthController {
 
     @Autowired
     private UserSessionManager sessionManager;
+
+    @Autowired
+    private StructureRepository structureRepository;
 
     //    @GetMapping("/test")
 //    public List<User> test() {
@@ -227,7 +233,7 @@ public class AuthController {
 
     @PostMapping("/validateToken/{jwtToken}")
     public Message<AuthDTO> validateToken(@PathVariable String jwtToken) {
-        return new Message<>("success", HttpStatus.OK, userService.validateToken(jwtToken));
+        return userService.validateToken(jwtToken);
     }
 
     @PostMapping("/refresh")

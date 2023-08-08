@@ -21,5 +21,7 @@
 14. Cache query
 15. Mock, Unit test, Integration test: Mockito.mock() vs @Mock vs @MockBean, test controller, test service, test repo
 16. Spring resttemplate vs Webclient
-17. redis
-18. kafka
+17. Spring multiple modules 
+18. redis
+19. kafka
+  

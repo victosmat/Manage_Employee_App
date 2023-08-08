@@ -11,8 +11,13 @@
 	<groupId>com.kafka.consumer</groupId>
 	<artifactId>spring-kafka-consumer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 	<name>spring-kafka-consumer</name>
 	<description>Spring Kafka Consumer Demo</description>
+	<modules>
+		<module>model</module>
+		<module>web</module>
+	</modules>
 	<properties>
 		<java.version>11</java.version>
 	</properties>

@@ -1,0 +1,11 @@
+# Sử dụng image cơ sở
+FROM openjdk:17-jdk-slim
+
+# Thiết lập thư mục làm việc
+WORKDIR /Manage-Employee-App
+
+# Sao chép tệp JAR vào thư mục làm việc
+COPY ./target/demo-0.0.1-SNAPSHOT.jar app.jar
+
+# Lệnh để thực hiện ứng dụng
+CMD ["java", "-jar", "app.jar"]

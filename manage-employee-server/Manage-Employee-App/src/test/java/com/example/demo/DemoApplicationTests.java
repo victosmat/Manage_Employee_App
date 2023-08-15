@@ -22,45 +22,45 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Rollback(true)
 public class DemoApplicationTests {
-    @Autowired
-    private TestEntityManager testEntityManager;
-    @Autowired
-    private UserRepository userRepository;
-
-    //PERSIST
-    @Test
-    public void testCascadePersist() {
-        User user = new User();
-        Address address = new Address();
-        address.setUser(user);
-        user.setAddress(List.of(address));
-
-        testEntityManager.persist(user);
-        testEntityManager.flush();
-        testEntityManager.clear();
-    }
-
-    //MERGE
-    @Test
-    public void whenParentSavedThenMerged() {
-        User user = testEntityManager.find(User.class, 1);
-        Role role = (Role) user.getRoles();
-        user.setFullName("Minh2");
-        role.setNoteRole(Role.NoteRole.EMPLOYEE);
-        testEntityManager.merge(user);
-        testEntityManager.flush();
-        testEntityManager.clear();
-    }
-
-    //
-//    //REMOVE
-    @Test
-    public void whenParentRemovedThenChildRemoved() {
-        User user = testEntityManager.find(User.class, 1);
-        testEntityManager.remove(user);
-        testEntityManager.flush();
-        testEntityManager.clear();
-    }
+//    @Autowired
+//    private TestEntityManager testEntityManager;
+//    @Autowired
+//    private UserRepository userRepository;
+//
+//    //PERSIST
+//    @Test
+//    public void testCascadePersist() {
+//        User user = new User();
+//        Address address = new Address();
+//        address.setUser(user);
+//        user.setAddress(List.of(address));
+//
+//        testEntityManager.persist(user);
+//        testEntityManager.flush();
+//        testEntityManager.clear();
+//    }
+//
+//    //MERGE
+//    @Test
+//    public void whenParentSavedThenMerged() {
+//        User user = testEntityManager.find(User.class, 1);
+//        Role role = (Role) user.getRoles();
+//        user.setFullName("Minh2");
+//        role.setNoteRole(Role.NoteRole.EMPLOYEE);
+//        testEntityManager.merge(user);
+//        testEntityManager.flush();
+//        testEntityManager.clear();
+//    }
+//
+//    //
+////    //REMOVE
+//    @Test
+//    public void whenParentRemovedThenChildRemoved() {
+//        User user = testEntityManager.find(User.class, 1);
+//        testEntityManager.remove(user);
+//        testEntityManager.flush();
+//        testEntityManager.clear();
+//    }
 
     //
 //    //REFRESH

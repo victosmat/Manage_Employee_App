@@ -16,12 +16,12 @@ public interface JobDetailsRepository extends JpaRepository<JobDetails, Long> {
     @Query(value = "SELECT j FROM JobDetails j")
     List<JobDetails> findAllJobDetails(Sort sort);
 
-    @Query("SELECT new com.example.demo.payLoad.dto.TotalJobByUser(u.ID, COUNT(j.jobCode)) " +
-            "FROM JobDetails j JOIN j.users u GROUP BY u.ID")
+    @Query("SELECT new com.example.demo.payLoad.dto.TotalJobByUser(u.id, COUNT(j.jobCode)) " +
+            "FROM JobDetails j JOIN j.users u GROUP BY u.id")
     List<TotalJobByUser> getTotalJobByUser();
 
     JobDetails findByJobCode(String jobCode);
 
-    @Query("SELECT j FROM JobDetails j JOIN j.users u WHERE u.ID = ?1")
+    @Query("SELECT j FROM JobDetails j JOIN j.users u WHERE u.id = ?1")
     List<JobDetails> findAllJobDetailsByUser(Long userID);
 }

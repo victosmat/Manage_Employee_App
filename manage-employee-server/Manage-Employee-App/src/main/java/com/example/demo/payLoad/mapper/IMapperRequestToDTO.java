@@ -23,7 +23,7 @@ public interface IMapperRequestToDTO {
 
     StructureDTO mapperStructureToDTO(Structure structure);
 
-    @Mapping(source = "ID", target = "userID")
+    @Mapping(source = "id", target = "userID")
     @Mapping(source = "account.username", target = "username")
     @Mapping(target = "address", expression = "java(mapAddress(user))")
     @Mapping(target = "role", expression = "java(mapRole(user))")

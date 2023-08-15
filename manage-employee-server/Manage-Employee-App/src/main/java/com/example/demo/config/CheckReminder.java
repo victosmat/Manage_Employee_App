@@ -42,10 +42,10 @@ public class CheckReminder {
         userRepository.findAll().forEach(user -> {
             LocalTime checkinTime = LocalTime.parse(user.getTime().getCheckIn());
             LocalTime now = LocalTime.now();
-            List<Structure> structures = structureRepository.checkStructureInUser(String.valueOf(LocalDate.now()), user.getID());
+            List<Structure> structures = structureRepository.checkStructureInUser(String.valueOf(LocalDate.now()), user.getId());
             Structure structure = structures.get(0);
             if (now.isAfter(checkinTime) && structure == null) {
-                String content = "you forgot to check-in with code " + user.getID();
+                String content = "you forgot to check-in with code " + user.getId();
                 MailComponent mailDTO = new MailComponent(user.getEmail(), "Check-in notice!", content);
                 emailService.sendMail(mailDTO);
             }
@@ -55,9 +55,9 @@ public class CheckReminder {
     @Scheduled(cron = "0 ${spring.scheduled.minute} ${spring.scheduled.hourCheckOut} * * ${spring.scheduled.day}")
     public void sendCheckOutReminder() {
         userRepository.findAll().forEach(user -> {
-            List<Structure> structures = structureRepository.checkStructureInUser(String.valueOf(LocalDate.now()), user.getID());
+            List<Structure> structures = structureRepository.checkStructureInUser(String.valueOf(LocalDate.now()), user.getId());
             if (structures.size() == 1) {
-                String content = "you forgot to check-out with code " + user.getID();
+                String content = "you forgot to check-out with code " + user.getId();
                 MailComponent mailDTO = new MailComponent(user.getEmail(), "Check-out notice!", content);
                 emailService.sendMail(mailDTO);
             }

@@ -32,7 +32,7 @@ public class MapperRequestToDTO implements IMapperRequestToDTO {
 
     public UserDTO mapperUserToDTO(User user) {
         UserDTO userDTO = new UserDTO();
-        userDTO.setUserID(user.getID());
+        userDTO.setUserID(user.getId());
         userDTO.setRole(user.getRoles()
                 .stream()
                 .map(role -> role.getNoteRole().name())
@@ -58,7 +58,7 @@ public class MapperRequestToDTO implements IMapperRequestToDTO {
 
     public UserDTOInSession mapUserToUserDTOInSession(User user) {
         UserDTOInSession userDTOInSession = new UserDTOInSession();
-        userDTOInSession.setUserId(user.getID());
+        userDTOInSession.setUserId(user.getId());
         userDTOInSession.setFullName(user.getFullName());
         userDTOInSession.setEmail(user.getEmail());
         userDTOInSession.setRole(user.getRoles()
@@ -74,7 +74,7 @@ public class MapperRequestToDTO implements IMapperRequestToDTO {
         JobDetailsDTO jobDetailsDTO = modelMapper.map(jobDetails, JobDetailsDTO.class);
         jobDetailsDTO.setUserIDs(jobDetails.getUsers()
                 .stream()
-                .map(User::getID)
+                .map(User::getId)
                 .collect(Collectors.toList()));
         return jobDetailsDTO;
     }

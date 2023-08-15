@@ -21,7 +21,7 @@ public class User implements Comparable<User> {
             .collect(Collectors.toCollection(ArrayList::new));
     @Id
     @Column(name = "user_id")
-    private Long ID;
+    private Long id;
     private String fullName;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -67,7 +67,7 @@ public class User implements Comparable<User> {
         Random random = new Random();
         int randomIndex = random.nextInt(ids.size());
         ids.remove(randomIndex);
-        this.ID = ids.get(randomIndex);
+        this.id = ids.get(randomIndex);
         this.fullName = fullName;
         this.address = address;
         this.email = email;

@@ -15,7 +15,7 @@ import java.time.LocalTime;
 public class Time {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ID;
+    private Long id;
     private String checkIn;
     private String checkOut;
 }

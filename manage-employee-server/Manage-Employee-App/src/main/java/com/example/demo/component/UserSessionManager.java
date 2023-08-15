@@ -22,7 +22,7 @@ public class UserSessionManager {
     }
 
     public void createSession(User user) {
-        activeSessions.put(user.getID(), mapperRequestToDTO.mapperUserToDTO(user));
+        activeSessions.put(user.getId(), mapperRequestToDTO.mapperUserToDTO(user));
     }
 
     public List<UserDTO> getAllSession() {

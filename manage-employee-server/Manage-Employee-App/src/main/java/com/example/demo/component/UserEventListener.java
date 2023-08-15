@@ -1,6 +1,5 @@
 package com.example.demo.component;
 
-import com.example.demo.entity.User;
 import com.example.demo.payLoad.dto.UserDTOInSession;
 import com.example.demo.payLoad.mapper.MapperRequestToDTO;
 import lombok.extern.slf4j.Slf4j;

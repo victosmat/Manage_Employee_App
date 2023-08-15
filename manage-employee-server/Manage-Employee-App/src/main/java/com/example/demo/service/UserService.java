@@ -130,8 +130,8 @@ public class UserService {
                 String jwtTokenAccess = tokenProvider.generateAccessToken(customerUserDetails);
                 String jwtTokenRefresh = tokenProvider.generateRefreshToken(customerUserDetails);
                 String dateTimeNow = String.valueOf(LocalDateTime.now());
-                UserDTO userDTO = new UserDTO(user.getID(), user.getFullName(), null, user.getEmail(), user.getRoles().toString(), user.getAccount().getUsername());
-                String content = "You have successfully registered at " + dateTimeNow + " with ID = " + user.getID() + " and information:" + userDTO;
+                UserDTO userDTO = new UserDTO(user.getId(), user.getFullName(), null, user.getEmail(), user.getRoles().toString(), user.getAccount().getUsername());
+                String content = "You have successfully registered at " + dateTimeNow + " with ID = " + user.getId() + " and information:" + userDTO;
                 MailComponent mailDTO = new MailComponent(email, "successful registration!", content);
                 emailService.sendMail(mailDTO);
                 sessionManager.createSession(user);
@@ -188,7 +188,7 @@ public class UserService {
                     .map(Enum::toString)
                     .collect(Collectors.joining(", ")));
             String content = "You have successfully registered at " +
-                    dateTimeNow + " with ID = " + user.getID() + " and information:" +
+                    dateTimeNow + " with ID = " + user.getId() + " and information:" +
                     userDTO.toString();
             MailComponent mailDTO = new MailComponent(email, "successful registration!", content);
             emailService.sendMail(mailDTO);
@@ -205,7 +205,7 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(tokenProvider.getUserIdFromJWT(token));
         if (userOptional.isEmpty()) return new Message<>("User not found", HttpStatus.BAD_REQUEST, null);
         User user = userOptional.get();
-        return new Message<>("Token is valid", HttpStatus.OK, new AuthDTO(user.getID(), user.getAccount().getUsername(), token));
+        return new Message<>("Token is valid", HttpStatus.OK, new AuthDTO(user.getId(), user.getAccount().getUsername(), token));
     }
 
     @Transactional

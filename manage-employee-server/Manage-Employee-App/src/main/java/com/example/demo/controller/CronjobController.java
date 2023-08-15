@@ -85,7 +85,7 @@ public class CronjobController {
                 JobDetails finalJobDetails = jobDetails;
                 ScheduledFuture<?> scheduledTask = taskScheduler.schedule(() -> {
                     if (finalJobDetails.isJobExecuted()) return;
-                    List<Long> userIds = finalJobDetails.getUsers().stream().map(User::getID).toList();
+                    List<Long> userIds = finalJobDetails.getUsers().stream().map(User::getId).toList();
                     userIds.forEach(userID -> {
                         User user = userRepository.findById(userID).orElse(null);
                         if (user == null) log.error("User with id " + userID + " not found");

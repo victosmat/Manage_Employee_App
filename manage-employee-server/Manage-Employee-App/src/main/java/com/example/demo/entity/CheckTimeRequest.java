@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class CheckTimeRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ID;
+    private Long id;
     @Column(name = "user_id")
     private Long userID;
     private String checkIn;

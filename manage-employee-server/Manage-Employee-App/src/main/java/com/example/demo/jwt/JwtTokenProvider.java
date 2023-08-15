@@ -41,7 +41,7 @@ public class JwtTokenProvider {
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION_REFRESH_TOKEN);
         // Tạo chuỗi json web token từ id của user.
         return Jwts.builder()
-                .setSubject(Long.toString(userDetails.getUser().getID()))
+                .setSubject(Long.toString(userDetails.getUser().getId()))
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
@@ -54,12 +54,12 @@ public class JwtTokenProvider {
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION_ACCESS_TOKEN);
         // Tạo chuỗi json web token từ id của user.
         String accessToken = Jwts.builder()
-                .setSubject(Long.toString(userDetails.getUser().getID()))
+                .setSubject(Long.toString(userDetails.getUser().getId()))
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
                 .compact();
-        Long userID = userDetails.getUser().getID();
+        Long userID = userDetails.getUser().getId();
         String accessTokenInCache = accessTokenService.findById(userID);
         AccessToken token = new AccessToken(userID, accessToken);
         if (accessTokenInCache == null) accessTokenService.save(token);

@@ -18,7 +18,7 @@ public class Role {
     @Id
     @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
     @Column(name = "role_id")
-    private Long ID;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(unique = true) // chỉ chưa 1 giá trị duy nhất

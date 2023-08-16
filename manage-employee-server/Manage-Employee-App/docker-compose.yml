@@ -4,14 +4,14 @@ services:
   Manage-Employee-App:
     build:
       context: .
-      dockerfile: DockerFile
+      dockerfile: DockerFile #thực hiện với thư mục hiện tại và file DockerFile
 #    image: openjdk:17-jdk-slim
-    image: miglee/manager_employee_app:latest
+    image: miglee/manager_employee_app:latest # tham chiếu tới docker hub
     container_name: manage-employee-app
     command: java -jar ./target/demo-0.0.1-SNAPSHOT.jar
     ports:
       - "8080:8080"
-    working_dir: /Manage-Employee-App
+    working_dir: /Manage-Employee-App # thư mục làm việc
     volumes:
       - ./target:/Manage-Employee-App/target
     environment:

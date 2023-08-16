@@ -1,6 +1,5 @@
 package com.example.demo;
 
-import com.example.demo.controller.AdminController;
 import com.example.demo.controller.AuthController;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;

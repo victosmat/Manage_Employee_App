@@ -6,7 +6,9 @@ import com.example.demo.jwt.AuthTokenFilter;
 import com.example.demo.payLoad.Message;
 import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableScheduling
+@Slf4j
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${spring.security.remember_me.key}")
@@ -71,9 +74,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(username -> {
+            log.info("username: {}", username);
             Account account = accountRepository.findByUsername(username);
             User user = userRepository.findByAccount(account);
-            if (account == null) throw new UsernameNotFoundException(username + " not found");
+            if (account == null) throw new UsernameNotFoundException("Username " + username + " not found!");
             return new CustomerUserDetails(user);
         }).passwordEncoder(passwordEncoder());
     }

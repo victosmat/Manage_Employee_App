@@ -5,6 +5,7 @@ import com.example.demo.component.UserLogoutEvent;
 import com.example.demo.config.MailConfig;
 import com.example.demo.component.UserSessionManager;
 import com.example.demo.entity.Account;
+import com.example.demo.entity.Address;
 import com.example.demo.entity.User;
 import com.example.demo.payLoad.dto.UserDTOInSession;
 import com.example.demo.jwt.JwtTokenProvider;
@@ -13,10 +14,7 @@ import com.example.demo.payLoad.dto.*;
 import com.example.demo.payLoad.mapper.IMapperRequestToDTO;
 import com.example.demo.payLoad.mapper.MapperRequestToDTO;
 import com.example.demo.payLoad.request.*;
-import com.example.demo.repository.AccountRepository;
-import com.example.demo.repository.RoleRepository;
-import com.example.demo.repository.StructureRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.*;
 import com.example.demo.config.security.CustomerUserDetails;
 import com.example.demo.service.AccessTokenService;
 import com.example.demo.service.EmailService;
@@ -24,6 +22,8 @@ import com.example.demo.service.StructureService;
 import com.example.demo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -99,6 +99,8 @@ public class AuthController {
 
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
+    @Autowired
+    private AddressRepository addressRepository;
 
     //    @GetMapping("/test")
 //    public List<User> test() {
@@ -118,6 +120,18 @@ public class AuthController {
             Hibernate.initialize(user.getAddress());
         });
         return users;
+    }
+
+    @GetMapping("/getAddressByUserID/{userID}")
+    public Message<List<AddressRequest>> getAddressByUserID(@PathVariable Long userID) {
+        User user = userRepository.findById(userID).orElse(null);
+        if (user == null) return new Message<>("User not found!", HttpStatus.NOT_FOUND, null);
+        Specification<Address> userAddressSpec = (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("user"), user);
+
+        List<Address> addresses = addressRepository.findAll(userAddressSpec);
+        List<AddressRequest> addressRequests = mapperRequestToDTO.mapAddressToRequest(addresses);
+        return new Message<>("success", HttpStatus.OK, addressRequests);
     }
 
     @GetMapping("/getUserByID/{id}")
@@ -263,7 +277,7 @@ public class AuthController {
     }
 
     @PreDestroy
-    public void preDestroy(){
+    public void preDestroy() {
         log.info("Manage employee app stop !!!");
     }
 }

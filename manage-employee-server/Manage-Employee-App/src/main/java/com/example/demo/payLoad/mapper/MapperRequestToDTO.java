@@ -1,9 +1,6 @@
 package com.example.demo.payLoad.mapper;
 
-import com.example.demo.entity.JobDetails;
-import com.example.demo.entity.Role;
-import com.example.demo.entity.Structure;
-import com.example.demo.entity.User;
+import com.example.demo.entity.*;
 import com.example.demo.payLoad.dto.JobDetailsDTO;
 import com.example.demo.payLoad.dto.StructureDTO;
 import com.example.demo.payLoad.dto.UserDTO;
@@ -77,5 +74,12 @@ public class MapperRequestToDTO implements IMapperRequestToDTO {
                 .map(User::getId)
                 .collect(Collectors.toList()));
         return jobDetailsDTO;
+    }
+
+    public List<AddressRequest> mapAddressToRequest(List<Address> addresses) {
+        return addresses
+                .stream()
+                .map(address -> new AddressRequest(address.getStreet(), address.getCity()))
+                .collect(Collectors.toList());
     }
 }

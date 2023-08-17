@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -10,21 +11,14 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import java.util.Properties;
 
 @Configuration
+@ConfigurationProperties(prefix = "spring.mail")
+@Data
 public class MailConfig {
-
-    @Value("${spring.mail.host}")
     private String host;
-
-    @Value("${spring.mail.port}")
-    private Integer port;
-
-    @Value("${spring.mail.username}")
+    private int port;
     private String email;
-
-    @Value("${spring.mail.password}")
     private String password;
-
-    @Value("${spring.mail.isSSL}")
+    private String protocol;
     private String isSSL;
 
     @Bean
@@ -34,6 +28,7 @@ public class MailConfig {
         mailSender.setHost(host);
         mailSender.setPort(port);
         mailSender.setUsername(email);
+        mailSender.setProtocol(protocol);
         mailSender.setPassword(password);
         mailSender.setDefaultEncoding("UTF-8");
 

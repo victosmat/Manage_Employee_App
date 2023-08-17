@@ -27,7 +27,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,6 +37,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
+import javax.persistence.criteria.Join;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
@@ -327,6 +330,7 @@ public class UserService {
     }
 
     @CacheEvict(value = "user", allEntries = true)
+    @Scheduled(fixedDelay = 60000)
     public void deleteAllCache() {
         log.info("delete all cache");
     }
@@ -336,6 +340,7 @@ public class UserService {
         simulateSlowService();
         return new UserDTO(null, fullName, null, email, null, null);
     }
+
     private void simulateSlowService() {
         try {
             long time = 5000L;

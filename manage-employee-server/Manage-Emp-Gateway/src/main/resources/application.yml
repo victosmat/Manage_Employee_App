@@ -1,0 +1,52 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: Manage-Employee-App
+          uri: http://localhost:8080
+
+          predicates:
+            - Path=/api/auth/**
+        - id: Manage-Emp-kafka-consumer
+          #          uri: http://localhost:8080
+          #          uri: http://172.26.35.183:8080
+          uri: https://jsqedvglu56wklwlbxfhvc2ude.srv.us
+
+          predicates:
+            - Path=/api/user/**
+          #          - Path=/api/**
+          filters:
+            - AuthFilter
+        - id: rating-comment-service
+          uri: https://7zaaod2wuljtdb7kb6twfskznq.srv.us
+          predicates:
+            - Path=/api/rating-comment/**
+          filters:
+            - AuthFilter
+        - id: post-service
+          #          uri: http://172.26.188.52:3001
+          uri: https://yqshgzopthx3x6fmbqbg3zoq6m.srv.us
+          predicates:
+            - Path=/api/**
+          filters:
+            - AuthFilter
+        - id: image-service
+          #          uri: http://172.26.188.52:3001
+          uri: http://172.26.63.159:8900
+          predicates:
+            - Path=/**
+      #          filters:
+      #            - AuthFilter
+      default-filters:
+        - DeduceResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      global cors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"

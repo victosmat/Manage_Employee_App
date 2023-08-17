@@ -22,6 +22,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,6 +41,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${spring.security.remember_me.key}")
     private String rememberMeKey;
+
+    @Autowired
+    private CustomerUserDetailsService customerUserDetailsService;
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
@@ -75,10 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(username -> {
             log.info("username: {}", username);
-            Account account = accountRepository.findByUsername(username);
-            User user = userRepository.findByAccount(account);
-            if (account == null) throw new UsernameNotFoundException("Username " + username + " not found!");
-            return new CustomerUserDetails(user);
+            return customerUserDetailsService.loadUserByUsername(username);
         }).passwordEncoder(passwordEncoder());
     }
 

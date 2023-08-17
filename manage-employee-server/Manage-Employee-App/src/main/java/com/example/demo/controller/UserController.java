@@ -13,11 +13,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/user")
 @Slf4j
 public class UserController {
-    @Autowired
     private StructureService structureService;
 
+    public UserController(StructureService structureService) {
+        this.structureService = structureService;
+    }
+
+    public void setStructureService(StructureService structureService) {
+        this.structureService = structureService;
+    }
+
     @PostMapping("/checkTime/{userID}")
-    @Profile("dev")
     public Message<StructureDTO> checkTime(@PathVariable Long userID) {
         return structureService.checkTime(userID);
     }

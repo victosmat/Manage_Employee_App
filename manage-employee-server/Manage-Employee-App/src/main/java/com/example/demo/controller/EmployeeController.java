@@ -20,10 +20,13 @@ import java.util.List;
 @RequestMapping(value = "/employee")
 @Slf4j
 public class EmployeeController {
-    @Autowired
-    private StructureService structureService;
-    @Autowired
-    private UserService userService;
+    private final StructureService structureService;
+    private final UserService userService;
+
+    public EmployeeController(StructureService structureService, UserService userService) {
+        this.structureService = structureService;
+        this.userService = userService;
+    }
 
     @GetMapping("/getAllStructuresByUser")
     public Message<List<IStatisticalNorDTO>> getAllStructuresByUser(HttpServletRequest httpServletRequest, @RequestBody TimeFromToRequest timeFromToRequest) {

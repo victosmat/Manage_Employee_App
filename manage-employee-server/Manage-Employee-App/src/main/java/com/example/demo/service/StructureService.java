@@ -47,8 +47,6 @@ public class StructureService {
     private CheckTimeRequestRepository checkTimeRequestRepository;
     @Autowired
     private TimeRepository timeRepository;
-
-
     public Message<StructureDTO> checkTime(Long userID) {
         LocalDateTime dateTimeNow = LocalDateTime.now();
         String dateNow = dateTimeNow.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
